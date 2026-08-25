@@ -1,0 +1,11 @@
+{
+  "short_name": "Ultimate",
+  "name": "Ultimate Scoresheet",
+  "icons": [
+    { "src": "icon.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "theme_color": "#000000"
+}

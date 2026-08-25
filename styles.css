@@ -1,0 +1,32 @@
+body {
+  background-color: white;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+}
+h2 {
+  color: rgb(0, 65, 114);
+  text-align: center;
+}
+
+div {
+  color: rgb(0, 65, 114);
+}
+
+button {
+    background-color: #004172;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}

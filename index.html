@@ -11,16 +11,16 @@
     <img src="rgs.png" alt="rgslogo" style="height: 150px;align-items: center; display: block; margin-left: auto; margin-right: auto;">
     <h2 id="MatchTitle">Match Scoresheet</h2>
     <div id="players"></div>
-    <div>
+    <div class="input-row">
         <input type="text" id="playerInput" placeholder="Player Name" style="width: 200px;">
         <button id="addbutton" style="font-size: large;" onclick="addPlayer()">+</button>
     </div>
     
-    <div style="margin-top: 10px;">
+    <div class="button-container" style="margin-top: 10px; align-items: center;">
         <button id="mybutton" onclick="clearPlayers()">Clear Players</button>
         <button id="mybutton" onclick="clearMatch()">Clear Match</button>
     </div>
-    <h2 id="ScoreTitle">Ultimate Scoresheet</h2>
+    <h2 id="ScoreTitle">Competition Scoresheet</h2>
     <footer id="scoreboard"></footer>
     <script src="app.js" defer></script>
 </body>

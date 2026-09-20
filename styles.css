@@ -179,10 +179,11 @@ h2#ScoreTitle {
 }
 
 .sb-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Pushes score and 'Opponent' to hug the center */
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-start; /* Aligned starting from the center outward */
+  width: 100%; /* Spans full width of the right 1fr grid column */
 }
 
 .team-name {
@@ -217,6 +218,8 @@ h2#ScoreTitle {
 
 .opponent-name {
     padding: 6px 10px;
+    flex: 1; /* Automatically expands to fill remaining space in sb-right */
+    min-width: 50px; /* Prevents input from completely collapsing on small screens */
     font-size: 22px;
     border-radius: 8px;
     border: 1px solid #004172;

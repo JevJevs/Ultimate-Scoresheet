@@ -1,6 +1,10 @@
 let players = [];
 let allPlayers = [];
 let awayScore = 0;
+let currentSortColumn = 'totalGoals'; // Default sort column
+let sortAscending = false;            // Default descending (highest stats first)
+let isInitialLoad = true; // Track initial page setup
+let previousHomeScore = null;
 
 const playersDiv = document.getElementById("players");
 const input = document.getElementById("playerInput");
@@ -15,9 +19,17 @@ function renderScoreboardBar() {
     const homeScoreEl = document.getElementById("homeScore");
     const awayScoreBtn = document.getElementById("awayScoreBtn");
 
+    // Strictly update text without any animation triggers
     homeScoreEl.textContent = getHomeScore();
     awayScoreBtn.textContent = awayScore;
 }
+
+// Away score click handler
+document.getElementById("awayScoreBtn").onclick = () => {
+    awayScore++;
+    renderScoreboardBar();
+    triggerOpponentRedFlash(); // Triggers the red-to-white background transition
+};
 
 function renderPlayers() {
     playersDiv.innerHTML = "";
@@ -118,6 +130,11 @@ function updateStat(idx, stat, amount) {
     renderscoreboard();
     renderScoreboardBar();
     savePlayers();
+
+    // Trigger green pulse ONLY when a goal button is clicked
+    if (stat === "goals" && amount > 0) {
+        triggerScorePop("homeScore");
+    }
 }
 
 function loadPlayers() {
@@ -173,6 +190,8 @@ function clearPlayers() {
         allPlayers = [];
         awayScore = 0;
         document.getElementById("opponentInput").value = "";
+        
+        previousHomeScore = null; // Reset tracker so clearing doesn't pulse
         renderPlayers();
         renderscoreboard();
         savePlayers();
@@ -187,24 +206,37 @@ function renderscoreboard() {
 
     if (allPlayers.length === 0) return;
 
+    // 1. Sort the allPlayers array dynamically based on current selected column
+    allPlayers.sort((a, b) => {
+        const valA = a[currentSortColumn] || 0;
+        const valB = b[currentSortColumn] || 0;
+        return sortAscending ? valA - valB : valB - valA;
+    });
+
     const table = document.createElement("table");
     table.style.borderCollapse = "collapse";
     table.style.width = "100%";
 
+    // Helper arrow indicator to show active sort direction
+    const getArrow = (col) => {
+        if (currentSortColumn !== col) return "";
+        return sortAscending ? " ▲" : " ▼";
+    };
+
     const thead = document.createElement("thead");
     thead.innerHTML = `
-        <tr style="text-align: left; border-bottom: 2px solid #000141;">
-            <th style="padding: 8px; text-align: left;">Name</th>
-            <th style="padding: 8px; text-align: center;">Total Goals</th>
-            <th style="padding: 8px; text-align: center;">Total Assists</th>
-            <th style="padding: 8px; text-align: center;">Total Blocks</th>
+        <tr style="text-align: left; border-bottom: 2px solid #000141; cursor: pointer;">
+            <th style="padding: 8px; text-align: left;" id="sort-name">Name${getArrow('name')}</th>
+            <th style="padding: 8px; text-align: center;" id="sort-goals">Goals${getArrow('totalGoals')}</th>
+            <th style="padding: 8px; text-align: center;" id="sort-assists">Assists${getArrow('totalAssists')}</th>
+            <th style="padding: 8px; text-align: center;" id="sort-blocks">Blocks${getArrow('totalBlocks')}</th>
         </tr>
     `;
     table.appendChild(thead);
 
     const tbody = document.createElement("tbody");
 
-    // Render from allPlayers array
+    // Render sorted rows
     allPlayers.forEach(player => {
         const tr = document.createElement("tr");
         tr.style.borderBottom = "1px solid #0001414b";
@@ -218,17 +250,17 @@ function renderscoreboard() {
         const goalsTd = document.createElement("td");
         goalsTd.style.padding = "8px";
         goalsTd.style.textAlign = "center";
-        goalsTd.textContent = player.totalGoals;
+        goalsTd.textContent = player.totalGoals || 0;
 
         const assistsTd = document.createElement("td");
         assistsTd.style.padding = "8px";
         assistsTd.style.textAlign = "center";
-        assistsTd.textContent = player.totalAssists;
+        assistsTd.textContent = player.totalAssists || 0;
 
         const blocksTd = document.createElement("td");
         blocksTd.style.padding = "8px";
         blocksTd.style.textAlign = "center";
-        blocksTd.textContent = player.totalBlocks;
+        blocksTd.textContent = player.totalBlocks || 0;
 
         tr.appendChild(nameTd);
         tr.appendChild(goalsTd);
@@ -239,6 +271,25 @@ function renderscoreboard() {
 
     table.appendChild(tbody);
     scoreboardDiv.appendChild(table);
+
+    // 2. Attach click events to headers AFTER adding table to DOM
+    document.getElementById("sort-name").onclick = () => sortBy('name');
+    document.getElementById("sort-goals").onclick = () => sortBy('totalGoals');
+    document.getElementById("sort-assists").onclick = () => sortBy('totalAssists');
+    document.getElementById("sort-blocks").onclick = () => sortBy('totalBlocks');
+}
+
+// Handler function to toggle sort direction or change column
+function sortBy(columnKey) {
+    if (currentSortColumn === columnKey) {
+        // Toggle direction if clicking the same column
+        sortAscending = !sortAscending;
+    } else {
+        // Switch column and default to descending (highest first) for numbers, ascending for names
+        currentSortColumn = columnKey;
+        sortAscending = (columnKey === 'name');
+    }
+    renderscoreboard();
 }
 
 function clearMatch() {
@@ -250,6 +301,8 @@ function clearMatch() {
         });
         awayScore = 0;
         document.getElementById("opponentInput").value = "";
+        
+        previousHomeScore = null; // Reset tracker so clearing doesn't pulse
         renderPlayers();
         savePlayers();
         renderScoreboardBar();
@@ -258,9 +311,14 @@ function clearMatch() {
 
 document.addEventListener("DOMContentLoaded", loadPlayers);
 
-document.getElementById("awayScoreBtn").onclick = () => {
+document.getElementById("awayScoreBtn").onclick = function() {
     awayScore++;
-    renderScoreboardBar();
+    
+    // First update the text score
+    renderScoreboardBar(); 
+    
+    // Then trigger the pulse on top of the new text
+    triggerAwayRedPulse(); 
 };
 
 input.addEventListener("keypress", function(event) {
@@ -269,3 +327,30 @@ input.addEventListener("keypress", function(event) {
         document.getElementById("addbutton").click();
     }
 });
+
+function triggerScorePop(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    el.classList.remove("pop-animation");
+    void el.offsetWidth; // Force DOM repaint
+    requestAnimationFrame(() => {
+        el.classList.add("pop-animation");
+    });
+}
+
+function triggerAwayRedPulse() {
+    const btn = document.getElementById("awayScoreBtn");
+    if (!btn) return;
+
+    // 1. Remove class first
+    btn.classList.remove("flash-red");
+
+    // 2. Force browser repaint so it registers the reset
+    void btn.offsetWidth;
+
+    // 3. Add class in the next frame AFTER text update completes
+    requestAnimationFrame(() => {
+        btn.classList.add("flash-red");
+    });
+}

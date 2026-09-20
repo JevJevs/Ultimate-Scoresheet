@@ -10,13 +10,23 @@
 <body>
     <img src="rgs.png" alt="rgslogo" style="height: 150px;align-items: center; display: block; margin-left: auto; margin-right: auto;">
     <!-- <h2 id="MatchTitle">Match Stats</h2> -->
-    <div id="scoreboardBar" class="scoreboard-bar" style="align-items: center;">
-        <span class="team-name">RGS Ravens</span>
+<div id="scoreboardBar" class="scoreboard-bar">
+    
+    <div class="sb-left">
+        <span class="team-name">Ravens</span>
         <span id="homeScore" class="score-box">0</span>
-        <span class="vs-label">vs</span>
-        <button id="awayScoreBtn" class="score-button">0</button>
-        <input type="text" id="opponentInput" placeholder="Opponent" class="opponent-name"style="width: 125px;">
     </div>
+
+    <div class="sb-center">
+        <span class="vs-label">vs</span>
+    </div>
+
+    <div class="sb-right">
+        <button id="awayScoreBtn" class="score-button">0</button>
+        <input type="text" id="opponentInput" placeholder="Opponent" class="opponent-name" style="width:125px;">
+    </div>
+
+</div>  
     <div id="players"></div>
     <div class="input-row">
         <input type="text" id="playerInput" placeholder="Player Name" style="width: 200px;">
@@ -24,7 +34,7 @@
     </div>
     
     <div class="button-container" style="margin-top: 10px; align-items: center;">
-        <button id="mybutton" onclick="clearPlayers()">Clear Players</button>
+        <button id="mybutton" onclick="clearPlayers()">Clear All</button>
         <button id="mybutton" onclick="clearMatch()">Clear Match</button>
     </div>
     <h2 id="ScoreTitle">Overall Competition Stats</h2>

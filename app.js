@@ -171,9 +171,12 @@ function clearPlayers() {
     if (confirm("Are you sure you want to clear all players and lifetime stats?")) {
         players = [];
         allPlayers = [];
+        awayScore = 0;
+        document.getElementById("opponentInput").value = "";
         renderPlayers();
         renderscoreboard();
         savePlayers();
+        renderScoreboardBar();
     }
 }
 

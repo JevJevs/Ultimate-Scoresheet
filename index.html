@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Scoresheet</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <img src="rgs.png" alt="rgslogo" style="height: 150px;align-items: center; display: block; margin-left: auto; margin-right: auto;">
-    <h2 id="MatchTitle">Match Scoresheet</h2>
+    <!-- <h2 id="MatchTitle">Match Stats</h2> -->
+    <div id="scoreboardBar" class="scoreboard-bar" style="align-items: center;">
+        <span class="team-name">RGS Ravens</span>
+        <span id="homeScore" class="score-box">0</span>
+        <span class="vs-label">vs</span>
+        <button id="awayScoreBtn" class="score-button">0</button>
+        <input type="text" id="opponentInput" placeholder="Opponent" class="opponent-name"style="width: 125px;">
+    </div>
     <div id="players"></div>
     <div class="input-row">
         <input type="text" id="playerInput" placeholder="Player Name" style="width: 200px;">
@@ -20,7 +27,7 @@
         <button id="mybutton" onclick="clearPlayers()">Clear Players</button>
         <button id="mybutton" onclick="clearMatch()">Clear Match</button>
     </div>
-    <h2 id="ScoreTitle">Competition Scoresheet</h2>
+    <h2 id="ScoreTitle">Overall Competition Stats</h2>
     <footer id="scoreboard"></footer>
     <script src="app.js" defer></script>
 </body>
